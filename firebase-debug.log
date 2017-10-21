@@ -1,27 +1,35 @@
-[debug] [2017-10-21T04:18:38.499Z] ----------------------------------------------------------------------
-[debug] [2017-10-21T04:18:38.502Z] Command:       /Users/richg/.nvm/versions/node/v6.11.4/bin/node /Users/richg/.nvm/versions/node/v6.11.4/bin/firebase serve --only functions
-[debug] [2017-10-21T04:18:38.503Z] CLI Version:   3.13.1
-[debug] [2017-10-21T04:18:38.503Z] Platform:      darwin
-[debug] [2017-10-21T04:18:38.503Z] Node Version:  v6.11.4
-[debug] [2017-10-21T04:18:38.503Z] Time:          Sat Oct 21 2017 15:18:38 GMT+1100 (AEDT)
-[debug] [2017-10-21T04:18:38.504Z] ----------------------------------------------------------------------
+[debug] [2017-10-21T08:44:58.953Z] ----------------------------------------------------------------------
+[debug] [2017-10-21T08:44:58.957Z] Command:       /Users/richg/.nvm/versions/node/v6.11.4/bin/node /Users/richg/.nvm/versions/node/v6.11.4/bin/firebase serve --only functions
+[debug] [2017-10-21T08:44:58.957Z] CLI Version:   3.13.1
+[debug] [2017-10-21T08:44:58.957Z] Platform:      darwin
+[debug] [2017-10-21T08:44:58.958Z] Node Version:  v6.11.4
+[debug] [2017-10-21T08:44:58.958Z] Time:          Sat Oct 21 2017 19:44:58 GMT+1100 (AEDT)
+[debug] [2017-10-21T08:44:58.958Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2017-10-21T04:18:38.518Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2017-10-21T04:18:38.519Z] > authorizing via signed-in user
-[debug] [2017-10-21T04:18:38.521Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/cargone-couriers  
- Sat Oct 21 2017 15:18:38 GMT+1100 (AEDT)
-[debug] [2017-10-21T04:18:39.609Z] <<< HTTP RESPONSE 200
-[debug] [2017-10-21T04:18:39.610Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/cargone-couriers/tokens  
- Sat Oct 21 2017 15:18:39 GMT+1100 (AEDT)
-[debug] [2017-10-21T04:18:40.594Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-21T08:44:58.978Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-10-21T08:44:58.978Z] > authorizing via signed-in user
+[debug] [2017-10-21T08:44:58.980Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-10-21T08:44:58.980Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/598o4du-9AGMjplov4s-rqaPEoGulUEfHLYCoUjDbUHJoL6TuXQsCf6rbKDhhAov',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Sat Oct 21 2017 19:44:58 GMT+1100 (AEDT)
+[debug] [2017-10-21T08:44:59.325Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-21T08:44:59.333Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/cargone-couriers  
+ Sat Oct 21 2017 19:44:59 GMT+1100 (AEDT)
+[debug] [2017-10-21T08:45:00.731Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-21T08:45:00.732Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/cargone-couriers/tokens  
+ Sat Oct 21 2017 19:45:00 GMT+1100 (AEDT)
+[debug] [2017-10-21T08:45:01.651Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Serving from '/Users/richg/git/cargone'...
 [info] 
 [info] i  functions: Preparing to emulate functions.
-[debug] [2017-10-21T04:18:40.952Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/cargone-couriers  
- Sat Oct 21 2017 15:18:40 GMT+1100 (AEDT)
-[debug] [2017-10-21T04:18:40.953Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/cargone-couriers/apiKeys  
- Sat Oct 21 2017 15:18:40 GMT+1100 (AEDT)
-[debug] [2017-10-21T04:18:42.367Z] <<< HTTP RESPONSE 200
-[debug] [2017-10-21T04:18:42.512Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-21T08:45:02.101Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/cargone-couriers  
+ Sat Oct 21 2017 19:45:02 GMT+1100 (AEDT)
+[debug] [2017-10-21T08:45:02.102Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/cargone-couriers/apiKeys  
+ Sat Oct 21 2017 19:45:02 GMT+1100 (AEDT)
+[debug] [2017-10-21T08:45:03.649Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-21T08:45:03.699Z] <<< HTTP RESPONSE 200
 [info] ✔  functions: createBooking: http://localhost:5000/cargone-couriers/us-central1/createBooking

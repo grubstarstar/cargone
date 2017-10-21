@@ -1,16 +1,19 @@
 const initialState = {
 	isSubmitting: false,
 	fields: {
-		customerName: 'ggggp',
+		customerName: '',
 		companyName: '',
 		emailAddress: '',
 		phoneNumber: '',
 		pickupName: '',
 		pickupCompanyName: '',
 		pickupAddress: '',
+		pickupPhoneNumber: '',
 		deliveryName: '',
 		deliveryCompanyName: '',
 		deliveryAddress: '',
+		deliveryPhoneNumber: '',
+		additionalInformation: '',
 	},
 	fieldErrors: {
 		customerName: '',
@@ -20,9 +23,12 @@ const initialState = {
 		pickupName: '',
 		pickupCompanyName: '',
 		pickupAddress: '',
+		pickupPhoneNumber: '',
 		deliveryName: '',
 		deliveryCompanyName: '',
 		deliveryAddress: '',
+		deliveryPhoneNumber: '',
+		additionalInformation: '',
 	}
 };
 

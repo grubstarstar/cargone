@@ -19,7 +19,7 @@ const createBookingSuccess = (json) => ({
 
 export const createBooking = () => (dispatch, getState) => {
 	const details = getState().bookingForm.fields;
-	
+	console.log('details', details);
 	dispatch(createBookingStart());
 
 	fetch('http://localhost:5000/cargone-couriers/us-central1/createBooking', {
@@ -28,7 +28,7 @@ export const createBooking = () => (dispatch, getState) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: details,
+		body: JSON.stringify(details),
 		mode: 'cors'
 	})
 	.then(res => res.json())
