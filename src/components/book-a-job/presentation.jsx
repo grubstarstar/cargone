@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default class extends Component {
 	constructor(props) {
 		super(props);
-		console.log('props', props);
 		this._cssClasses = {
 			root: 'form-group',
 			input: 'form-control',
@@ -21,7 +20,7 @@ export default class extends Component {
 			},
 			type: 'search',
 			placeholder: 'Pickup address...',
-			autoFocus: true,
+			autoFocus: false,
 		}
 		this._deliveryAddressInputProps = {
 			value: '',
@@ -31,7 +30,7 @@ export default class extends Component {
 			},
 			type: 'search',
 			placeholder: 'Delivery address...',
-			autoFocus: true,
+			autoFocus: false,
 		}
 		this.submit = this.submit.bind(this);
 	}
@@ -55,7 +54,7 @@ export default class extends Component {
 				<h3>Personal information</h3>
 				<form className="form" onSubmit={this.submit}>
 					<div className="form-group">
-						<label for="customerName">Name</label>
+						<label htmlFor="customerName">Name</label>
 						<input
 							value={this.props.form.customerName}
 							onChange={event => this.props.onChange('customerName', event.target.value)}
@@ -66,7 +65,7 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="companyName">Company name</label>
+						<label htmlFor="companyName">Company name</label>
 						<input
 							value={this.props.form.companyName}
 							onChange={event => this.props.onChange('companyName', event.target.value)}
@@ -76,7 +75,7 @@ export default class extends Component {
 							placeholder="Enter your company's name" />
 					</div>
 					<div className="form-group">
-						<label for="emailAddress">Email address</label>
+						<label htmlFor="emailAddress">Email address</label>
 						<input
 							value={this.props.form.emailAddress}
 							onChange={event => this.props.onChange('emailAddress', event.target.value)}
@@ -88,7 +87,7 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="phoneNumber">Contact number</label>
+						<label htmlFor="phoneNumber">Contact number</label>
 						<input
 							value={this.props.form.phoneNumber}
 							onChange={event => this.props.onChange('phoneNumber', event.target.value)}
@@ -99,7 +98,7 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="additionalInformation">Additional information</label>
+						<label htmlFor="additionalInformation">Additional information</label>
 						<textarea
 							value={this.props.form.additionalInformation}
 							onChange={event => this.props.onChange('additionalInformation', event.target.value)}
@@ -112,7 +111,7 @@ export default class extends Component {
 
 					<h3>Pick up address</h3>
 					<div className="form-group">
-						<label for="pickupName">Contact name</label>
+						<label htmlFor="pickupName">Contact name</label>
 						<input
 							value={this.props.form.pickupName}
 							onChange={event => this.props.onChange('pickupName', event.target.value)}
@@ -123,7 +122,7 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="pickupCompanyName">Company name</label>
+						<label htmlFor="pickupCompanyName">Company name</label>
 						<input
 							value={this.props.form.pickupCompanyName}
 							onChange={event => this.props.onChange('pickupCompanyName', event.target.value)}
@@ -134,14 +133,14 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="address">Pick up address</label>
+						<label htmlFor="address">Pick up address</label>
 						<PlacesAutocomplete classNames={this._cssClasses} inputProps={{
 							...this._pickupAddressInputProps,
 							value: this.props.form.pickupAddress
 						}} />
 					</div>
 					<div className="form-group">
-						<label for="pickupPhoneNumber">Contact number</label>
+						<label htmlFor="pickupPhoneNumber">Contact number</label>
 						<input
 							value={this.props.form.pickupPhoneNumber}
 							onChange={event => this.props.onChange('pickupPhoneNumber', event.target.value)}
@@ -154,7 +153,7 @@ export default class extends Component {
 
 					<h3>Drop off address</h3>
 					<div className="form-group">
-						<label for="deliveryName">Contact name</label>
+						<label htmlFor="deliveryName">Contact name</label>
 						<input
 						value={this.props.form.deliveryName}
 							onChange={event => this.props.onChange('deliveryName', event.target.value)}
@@ -165,7 +164,7 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="deliveryCompanyName">Company name</label>
+						<label htmlFor="deliveryCompanyName">Company name</label>
 						<input
 							value={this.props.form.deliveryCompanyName}
 							onChange={event => this.props.onChange('deliveryCompanyName', event.target.value)}
@@ -176,14 +175,14 @@ export default class extends Component {
 						/>
 					</div>
 					<div className="form-group">
-						<label for="address">Delivery address</label>
+						<label htmlFor="address">Delivery address</label>
 						<PlacesAutocomplete classNames={this._cssClasses} inputProps={{
 							...this._deliveryAddressInputProps,
 							value: this.props.form.deliveryAddress
 						}} />
 					</div>
 					<div className="form-group">
-						<label for="deliveryPhoneNumber">Contact number</label>
+						<label htmlFor="deliveryPhoneNumber">Contact number</label>
 						<input
 							value={this.props.form.deliveryPhoneNumber}
 							onChange={event => this.props.onChange('deliveryPhoneNumber', event.target.value)}
