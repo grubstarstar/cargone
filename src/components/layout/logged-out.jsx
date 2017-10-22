@@ -6,7 +6,9 @@ import logo from '../../images/logo-black.png';
 export default ({children}) => (
 	<div className="container">
 		<header className="App-header">
-			<img src={logo} className="App-logo" alt="logo" />
+			<div style={{margin:'auto', width: '100px'}}>
+				<img style={{width: '100px'}} src={logo} className="App-logo" alt="logo" />
+			</div>
 		</header>
 		
 		<div className="row">
