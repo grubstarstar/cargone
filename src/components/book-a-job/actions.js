@@ -17,16 +17,20 @@ const createBookingSuccess = (json) => ({
 	json
 })
 
+console.log('/cargone-couriers/us-central1/createBooking');
+
 export const createBooking = () => (dispatch, getState) => {
 	const details = getState().bookingForm.fields;
+	const idToken = getState().firebase.idToken;
 	console.log('details', details);
 	dispatch(createBookingStart());
 
-	fetch('http://localhost:5000/cargone-couriers/us-central1/createBooking', {
+	fetch('/cargone-couriers/us-central1/createBooking', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			'X-Firebase-Token': idToken
 		},
 		body: JSON.stringify(details),
 		mode: 'cors'

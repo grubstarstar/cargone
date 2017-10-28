@@ -12,6 +12,5 @@ module.exports = function override(config, env) {
 			// Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
 		})
 	)
-	console.log('config.plugins', config.plugins)
 	return config;
 }
