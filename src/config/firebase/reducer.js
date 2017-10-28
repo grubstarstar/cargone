@@ -8,5 +8,10 @@ export default (state = initialState, action) => {
 			idToken: action.idToken
 		});
 	}
+	else if(action.type == 'deleteFirebaseIdToken') {
+		return Object.assign({}, state, {
+			idToken: null
+		});
+	}
 	return state;
 };

@@ -44,6 +44,8 @@ export default function(state = initialState, action) {
 			return Object.assign({}, state, { isSubmitting: true });
 		case 'createBooking/Success':
 			return Object.assign({}, state, { isSubmitting: false });
+		case 'createBooking/Failure':
+			return Object.assign({}, state, { isSubmitting: false });
 		default:
 			return state;
 	}

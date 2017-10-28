@@ -1,5 +1,9 @@
 const functions = require('firebase-functions');
-var fetch = require('isomorphic-fetch');
+var fetch = require('node-fetch');
+var FetchError = require('node-fetch/lib/fetch-error');
+console.log('fetch', fetch);
+console.log('FetchError', FetchError);
+var HttpError = require("http-error");
 var stream = require('stream');
 const cors = require('cors')({origin: true});
 const moment = require('moment');
@@ -28,36 +32,105 @@ exports.register = functions.https.onRequest((req, res) => {
 	// store the Yojee accessToken linked to the idToken.
 });
 
+function createBooking(customerJson, {
+	pickupAddress,
+	pickupName,
+	pickupPhoneNumber,
+	additionalInformation,
+	deliveryAddress,
+	deliveryName,
+	deliveryPhoneNumber
+}) {
+	console.log('customerJson.accessToken', customerJson.accessToken)
+	let body = {
+		items: [
+			{
+				weight: 4,
+				description: additionalInformation
+			}
+		],
+		pickup_hash: {
+			description: additionalInformation,
+			address: pickupAddress,
+			// unit_number: "",
+			from: "10AM",
+			to: "12PM",
+			perform_date: moment().unix(),
+			// latitude: 1.301863,
+			// longitude: 103.85867,
+			name: pickupName,
+			phone: pickupPhoneNumber
+		},
+		dropoff_hash: {
+			description: additionalInformation,
+			address: deliveryAddress,
+			// unit_number: "",
+			from: "4PM",
+			to: "5PM",
+			// latitude: 1.321375,
+			// longitude: 103.85224590000007,
+			name: deliveryName,
+			phone: deliveryPhoneNumber
+		},
+		job_hash: {
+			payload_type: "Package",
+			description: "Gift",
+			delivery_type: "nextday",
+			// customer_id: 28
+		}
+	};
+	var options = {
+		method: 'POST',
+		headers: {
+			'Access-Token': customerJson.accessToken,
+			'Content-Type': 'application/json',
+			'Accept': 'application/json'
+		},
+		body: JSON.stringify(body),
+		cache: 'default',
+	};
+
+	return fetch(`https://${sandboxBaseUrl}/api/customer/v1/deliveries/create`, options)
+		.then(response => response.json())
+		// .then(json => {
+		// 	console.log('json', json);
+		// 	res.status(200).json(json)
+		// })
+}
+
+function getCustomer(idToken) {
+	return Promise.resolve();
+	// ask Wai
+}
+
+function createCustomer(customerData) {
+	return fetch(`https://${sandboxBaseUrl}/api/customer/v1/registration`, {
+		method: 'POST',
+		headers: {
+			'Access-Token': sandboxAccessToken,
+			'Content-Type': 'application/json',
+			'Accept': 'application/json'
+		},
+		body: JSON.stringify(customerData),
+		cache: 'default'
+	})
+	.then(res => res.json());
+}
+
+
+// { result: 'problem',
+//   code: 'EmailTaken',
+//   message: 'There is already an account with this email' }
+
 exports.createBooking = functions.https.onRequest((req, res) => {
 	cors(req, res, () => {
 
-		// Is there an idToken?
-			// yes, fetch the customer from Yojee
-				// null, 
-
-		console.log('1:res.headersSent', res.headersSent);
+		// Verify request
 
 		if(!['POST','OPTIONS'].includes(req.method)) {
 			res.status(405).json({error:'Method Not Allowed'});
 			return;
 		}
-
-		console.log('2:res.headersSent', res.headersSent);
-
-		console.log('req.get("X-Firebase-Token")', req.get("X-Firebase-Token"));
-
-		const idToken = req.get("X-Firebase-Token");
-
-		admin.auth().verifyIdToken(idToken)
-		.then(function(decodedToken) {
-			var uid = decodedToken.uid;
-			console.log('DECODED TOKEN', decodedToken);
-			console.log('uid', uid);
-			// ...
-		}).catch(function(error) {
-			console.log('error', error);
-			// Handle error
-		});
 
 		const {
 			customerName,
@@ -75,254 +148,109 @@ exports.createBooking = functions.https.onRequest((req, res) => {
 			additionalInformation
 		} = req.body;
 
-		if(!(customerName && phoneNumber)) {
+		if(!(
+			customerName
+			&& phoneNumber
+			&& pickupAddress
+			&& pickupName
+			&& pickupPhoneNumber
+			&& additionalInformation
+			&& deliveryAddress
+			&& deliveryName
+			&& deliveryPhoneNumber
+		)) {
+			console.log('HERERERERERERERERER')
 			res.status(400).json({error:'Bad Request'})
 			return;
 		}
-
-		console.log('2:res.headersSent', res.headersSent);
-
-		fetch(`https://${sandboxBaseUrl}/api/customer/v1/registration`, {
-			method: 'POST',
-			headers: {
-				'Access-Token': sandboxAccessToken,
-				'Content-Type': 'application/json',
-				'Accept': 'application/json'
-			},
-			body: JSON.stringify({
-				phone: phoneNumber,
-				email: emailAddress,
-				password: "password",
-				billing_address: "",
-				name: customerName,
-				company_slug: "cargone"
-			}),
-			cache: 'default'
-		})
-		.then(res => res.json())
-		.then(json => {
-			console.log('JSON from registering a customer', json)
-
-			const customerAccessToken = json.accessToken;
-			const user = json.user;
-			console.log('customerAccessToken', customerAccessToken);
-			console.log('user', user);
-
-			// res.end();
-			// return;
-			let body = {
-				items: [
-					{
-						weight: 4,
-						description: additionalInformation
-					}
-				],
-				pickup_hash: {
-					// description: additionalInformation,
-					address: pickupAddress,
-					// unit_number: "",
-					from: "10AM",
-					to: "12PM",
-					perform_date: moment().unix(),
-					// latitude: 1.301863,
-					// longitude: 103.85867,
-					name: pickupName,
-					phone: pickupPhoneNumber
-				},
-				dropoff_hash: {
-					// description: additionalInformation,
-					address: deliveryAddress,
-					// unit_number: "",
-					from: "12PM",
-					to: "5PM",
-					// latitude: 1.321375,
-					// longitude: 103.85224590000007,
-					name: deliveryName,
-					phone: deliveryPhoneNumber
-				},
-				job_hash: {
-					payload_type: "Package",
-					description: "Gift",
-					delivery_type: "nextday",
-					// customer_id: 28
-				}
-			};
-			var options = {
-				method: 'POST',
-				headers: {
-					'Access-Token': customerAccessToken,
-					'Content-Type': 'application/json',
-					'Accept': 'application/json'
-				},
-				body: JSON.stringify(body),
-				cache: 'default',
-			};
-
-			console.log(`BOOK:https://${sandboxBaseUrl}/api/customer/v1/deliveries/create`);
-			console.log('BOOK:options', options);
-			console.log('BOOK:options.body', options.body);
-			fetch(`https://${sandboxBaseUrl}/api/customer/v1/deliveries/create`, options)
-				.then(response => response.json())
-				.then(json => {
-					console.log('json', json);
-					res.status(200).json(json)
-				})
-				.catch(err => {
-					console.log('err', err);
-					res.status(200).end()
-				});
-		});
-
-	});
-	
-});
-
-
-exports.createBooking = functions.https.onRequest((req, res) => {
-	cors(req, res, () => {
-
-		// Is there an idToken?
-			// yes, fetch the customer from Yojee
-				// null, 
-
-		console.log('1:res.headersSent', res.headersSent);
-
-		if(!['POST','OPTIONS'].includes(req.method)) {
-			res.status(405).json({error:'Method Not Allowed'});
-			return;
-		}
-
-		console.log('2:res.headersSent', res.headersSent);
-
-		console.log('req.get("X-Firebase-Token")', req.get("X-Firebase-Token"));
 
 		const idToken = req.get("X-Firebase-Token");
+		console.log('idToken', idToken);
 
-		admin.auth().verifyIdToken(idToken)
-		.then(function(decodedToken) {
-			var uid = decodedToken.uid;
-			console.log('DECODED TOKEN', decodedToken);
-			console.log('uid', uid);
-			// ...
-		}).catch(function(error) {
-			console.log('error', error);
-			// Handle error
-		});
-
-		const {
-			customerName,
-			companyName,
-			emailAddress,
-			phoneNumber,
-			pickupName,
-			pickupCompanyName,
-			pickupAddress,
-			pickupPhoneNumber,
-			deliveryName,
-			deliveryCompanyName,
-			deliveryAddress,
-			deliveryPhoneNumber,
-			additionalInformation
-		} = req.body;
-
-		if(!(customerName && phoneNumber)) {
-			res.status(400).json({error:'Bad Request'})
-			return;
-		}
-
-		console.log('2:res.headersSent', res.headersSent);
-
-		fetch(`https://${sandboxBaseUrl}/api/customer/v1/registration`, {
-			method: 'POST',
-			headers: {
-				'Access-Token': sandboxAccessToken,
-				'Content-Type': 'application/json',
-				'Accept': 'application/json'
-			},
-			body: JSON.stringify({
-				"phone": phoneNumber,
-				"email": emailAddress,
-				"password": "password",
-				"billing_address": "",
-				"name": customerName
-			}),
-			cache: 'default'
-		})
-		.then(res => res.json())
-		.then(json => {
-			console.log('JSON from registering a customer', json)
-
-			const customerAccessToken = json.accessToken;
-			const user = json.user;
-			console.log('customerAccessToken', customerAccessToken);
-			console.log('user', user);
-
-			// res.end();
-			// return;
-			let body = {
-				"items": [
-					{
-						"weight": 4,
-						"description": additionalInformation
-					}
-				],
-				"pickup_hash": {
-					// "description": additionalInformation,
-					"address": pickupAddress,
-					// "unit_number": "",
-					"from": "10AM",
-					"to": "12PM",
-					"perform_date": moment().unix(),
-					// "latitude": 1.301863,
-					// "longitude": 103.85867,
-					"name": pickupName,
-					"phone": pickupPhoneNumber
-				},
-				"dropoff_hash": {
-					// "description": additionalInformation,
-					"address": deliveryAddress,
-					// "unit_number": "",
-					"from": "12PM",
-					"to": "5PM",
-					// "latitude": 1.321375,
-					// "longitude": 103.85224590000007,
-					"name": deliveryName,
-					"phone": deliveryPhoneNumber
-				},
-				"job_hash": {
-					"payload_type": "Package",
-					"description": "Gift",
-					"delivery_type": "nextday",
-					// "customer_id": 28
-				}
-			};
-			var options = {
-				method: 'POST',
-				headers: {
-					'Access-Token': customerAccessToken,
-					'Content-Type': 'application/json',
-					'Accept': 'application/json'
-				},
-				body: JSON.stringify(body),
-				cache: 'default',
-			};
-
-			console.log(`BOOK:https://${sandboxBaseUrl}/api/customer/v1/deliveries/create`);
-			console.log('BOOK:options', options);
-			console.log('BOOK:options.body', options.body);
-			fetch(`https://${sandboxBaseUrl}/api/customer/v1/deliveries/create`, options)
-				.then(response => response.json())
-				.then(json => {
-					console.log('json', json);
-					res.status(200).json(json)
+		new Promise(function(resolve, reject) {
+			if(idToken) {
+				return admin.auth().verifyIdToken(idToken)
+				.then(function(firebaseUser) {
+					return firebaseUser;
+				}).catch(function(error) {
+					console.log('error', error);
+					reject(error);
 				})
-				.catch(err => {
-					console.log('err', err);
-					res.status(200).end()
+				.then(resolve);
+			} else {
+				resolve();
+			}
+		})		
+		.then(function(firebaseUser) {
+			console.log('Got fierbase User', firebaseUser);
+			if(firebaseUser) {
+				return getCustomer(idToken)
+				.then(function(customerJson) {
+					if(!customerJson) {
+						throw new HttpError.BadRequest("Couldn't find the customer in Yojee")
+					}
+					return customerJson;
+				})
+			} else {
+				// no, create user in Yojee
+				return createCustomer({
+					phone: phoneNumber,
+					email: emailAddress,
+					password: "password",
+					billing_address: "",
+					name: customerName,
+					company_slug: "cargone"
+				})
+				.then(function(customerJson) {
+					// error? throw
+					if(customerJson.result == 'problem') {
+						console.log('HERE');
+						console.log(customerJson);
+						throw new HttpError.BadRequest(customerJson.message)
+					}
+					return customerJson;
 				});
+			}
+		})
+		.then(function(customerJson) {
+			console.log('customerJson', customerJson);
+			return createBooking(customerJson, {
+				// booking data
+				pickupAddress,
+				pickupName,
+				pickupPhoneNumber,
+				deliveryAddress,
+				deliveryName,
+				deliveryPhoneNumber
+			})
+			.then(function(json) {
+				switch(json.status) {
+					case '422':
+						throw new HttpError.UnprocessableEntity(json.error);
+						break;
+					case '400':
+						throw new HttpError.BadRequest(json.error);
+						break;
+				}
+				return json;
+			})
+		})
+		.then(function(json) {
+			console.log('BOOKING', json);
+			return res.status(200).json(json);
+		})
+		.catch(function(ex) {
+			if(ex instanceof FetchError) {
+				return res.status(500).json({ "error": "I don't know what happened" });
+			} else if(ex instanceof HttpError.BadRequest) {
+				return res.status(ex.code).json({ "error": ex.message });
+			} else if(ex instanceof HttpError.UnprocessableEntity) {
+				return res.status(ex.code).json({ "error": ex.message });
+			} else {
+				console.log('UNCAUGHT ex', ex)
+			}
 		});
 
 	});
 	
 });
-	

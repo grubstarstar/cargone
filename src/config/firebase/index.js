@@ -47,6 +47,9 @@ firebase.auth().onAuthStateChanged((user) => {
 	} else {
 		// User is signed out.
 		console.log('Signed out');
+		store.dispatch({
+				type: 'deleteFirebaseIdToken'
+			})
 	}
 }, function(error) {
 	console.log('ERR', error);

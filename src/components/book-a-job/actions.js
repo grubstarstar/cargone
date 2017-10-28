@@ -17,7 +17,10 @@ const createBookingSuccess = (json) => ({
 	json
 })
 
-console.log('/cargone-couriers/us-central1/createBooking');
+const createBookingFailure = (json) => ({
+	type: 'createBooking/Failure',
+	json
+})
 
 export const createBooking = () => (dispatch, getState) => {
 	const details = getState().bookingForm.fields;
@@ -25,18 +28,28 @@ export const createBooking = () => (dispatch, getState) => {
 	console.log('details', details);
 	dispatch(createBookingStart());
 
-	fetch('/cargone-couriers/us-central1/createBooking', {
+	let headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	};
+	if(idToken) {
+		headers['X-Firebase-Token'] = idToken;
+	}
+
+	fetch('http://localhost:5000/cargone-couriers/us-central1/createBooking', {
 		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'X-Firebase-Token': idToken
-		},
+		headers,
 		body: JSON.stringify(details),
 		mode: 'cors'
 	})
 	.then(res => res.json())
-	.then(json => dispatch(createBookingSuccess(json)));
+	.then(json => {
+		if(json && json.message) {
+			dispatch(createBookingSuccess(json))
+		} else {
+			dispatch(createBookingFailure(json))
+		}
+	});
 
 };
 
